@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package auth;
+
+
+service AuthService {
+  rpc getInfor(GetInforUserRequest) returns (GetInforUserResponse) {}
+}
+
+message Empty {}
+
+message GetInforUserRequest {
+    string userId = 1;
+}
+
+message GetInforUserResponse {
+    string firstName = 1;
+    string lastName = 2;
+    string email = 3;
+}
+
