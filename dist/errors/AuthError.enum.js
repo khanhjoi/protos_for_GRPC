@@ -33,4 +33,5 @@ var AuthErrorCode;
     AuthErrorCode[AuthErrorCode["PERMISSION_DELETE_FAILED"] = 10020] = "PERMISSION_DELETE_FAILED";
     AuthErrorCode[AuthErrorCode["UNKNOWN_ERROR"] = 10021] = "UNKNOWN_ERROR";
     AuthErrorCode[AuthErrorCode["DEFAULT_ERROR"] = 10022] = "DEFAULT_ERROR";
+    AuthErrorCode[AuthErrorCode["DATABASE_ERROR"] = 10023] = "DATABASE_ERROR";
 })(AuthErrorCode || (exports.AuthErrorCode = AuthErrorCode = {}));
