@@ -30,7 +30,6 @@ class BadRequestException extends HttpCommonException {
     }
     toJson() {
         const result = super.toJson();
-        console.log("message had overwrite");
         return result;
     }
 }
@@ -41,7 +40,6 @@ class NotFoundException extends HttpCommonException {
     }
     toJson() {
         const result = super.toJson();
-        console.log("message had overwrite");
         return result;
     }
 }
@@ -52,7 +50,6 @@ class AuthorizationException extends HttpCommonException {
     }
     toJson() {
         const result = super.toJson();
-        console.log("message had overwrite");
         return result;
     }
 }

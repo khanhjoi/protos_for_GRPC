@@ -1,4 +1,11 @@
 import { HttpException } from "@nestjs/common";
+/**
+ * This type define common the response error throw back from exceptions
+ * @statusCode is status response error
+ * @errorCode is code of service error
+ * @message is message throw back from exceptions
+ * @timestamp is timestamp
+ */
 export interface CommonError {
     statusCode: number;
     errorCode: number;
