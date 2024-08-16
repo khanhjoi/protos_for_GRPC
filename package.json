@@ -4,7 +4,10 @@
   "description": "common protos and HttpException",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-
+  "scripts": {
+    "generate-proto": "protoc --ts_proto_out=./types --ts_proto_opt=nestJs=true ./../protos/auth.proto --experimental_allow_proto3_optional --ts_proto_opt=exportCommonSymbols=false -I=./../protos/",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "author": "khanhjoi",
   "license": "ISC",
   "dependencies": {
