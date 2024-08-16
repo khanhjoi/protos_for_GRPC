@@ -1,0 +1,12 @@
+{
+  "name": "jwat_protos",
+  "version": "1.0.0",
+  "description": "protocol file and common validation error",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "types": "./index.d.ts"
+}
