@@ -4,13 +4,18 @@ package auth;
 
 
 service AuthService {
-  rpc getInfor(GetInforUserRequest) returns (GetInforUserResponse) {}
+  rpc getInforById(GetInforUserByIdRequest) returns (GetInforUserResponse) {}
+  rpc getInforByEmail(GetInforUserByEmailRequest) returns (GetInforUserResponse) {}
 }
 
 message Empty {}
 
-message GetInforUserRequest {
+message GetInforUserByIdRequest {
     string userId = 1;
+}
+
+message GetInforUserByEmailRequest {
+    string email = 1;
 }
 
 message GetInforUserResponse {

@@ -1,8 +1,11 @@
 import { Observable } from "rxjs";
 export interface Empty {
 }
-export interface GetInforUserRequest {
+export interface GetInforUserByIdRequest {
     userId: string;
+}
+export interface GetInforUserByEmailRequest {
+    email: string;
 }
 export interface GetInforUserResponse {
     firstName: string;
@@ -10,10 +13,12 @@ export interface GetInforUserResponse {
     email: string;
 }
 export interface AuthServiceClient {
-    getInfor(request: GetInforUserRequest): Observable<GetInforUserResponse>;
+    getInforById(request: GetInforUserByIdRequest): Observable<GetInforUserResponse>;
+    getInforByEmail(request: GetInforUserByEmailRequest): Observable<GetInforUserResponse>;
 }
 export interface AuthServiceController {
-    getInfor(request: GetInforUserRequest): Promise<GetInforUserResponse> | Observable<GetInforUserResponse> | GetInforUserResponse;
+    getInforById(request: GetInforUserByIdRequest): Promise<GetInforUserResponse> | Observable<GetInforUserResponse> | GetInforUserResponse;
+    getInforByEmail(request: GetInforUserByEmailRequest): Promise<GetInforUserResponse> | Observable<GetInforUserResponse> | GetInforUserResponse;
 }
 export declare function AuthServiceControllerMethods(): (constructor: Function) => void;
 export declare const AUTH_SERVICE_NAME = "AuthService";
