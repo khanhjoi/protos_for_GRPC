@@ -1,24 +1,24 @@
 import { Observable } from "rxjs";
 export interface Empty {
 }
-export interface GetInforUserByIdRequest {
+export interface GetInfoUserByIdRequest {
     userId: string;
 }
-export interface GetInforUserByEmailRequest {
+export interface GetInfoUserByEmailRequest {
     email: string;
 }
-export interface GetInforUserResponse {
+export interface GetInfoUserResponse {
     firstName: string;
     lastName: string;
     email: string;
 }
 export interface AuthServiceClient {
-    getInforById(request: GetInforUserByIdRequest): Observable<GetInforUserResponse>;
-    getInforByEmail(request: GetInforUserByEmailRequest): Observable<GetInforUserResponse>;
+    getInfoById(request: GetInfoUserByIdRequest): Observable<GetInfoUserResponse>;
+    getInfoByEmail(request: GetInfoUserByEmailRequest): Observable<GetInfoUserResponse>;
 }
 export interface AuthServiceController {
-    getInforById(request: GetInforUserByIdRequest): Promise<GetInforUserResponse> | Observable<GetInforUserResponse> | GetInforUserResponse;
-    getInforByEmail(request: GetInforUserByEmailRequest): Promise<GetInforUserResponse> | Observable<GetInforUserResponse> | GetInforUserResponse;
+    getInfoById(request: GetInfoUserByIdRequest): Promise<GetInfoUserResponse> | Observable<GetInfoUserResponse> | GetInfoUserResponse;
+    getInfoByEmail(request: GetInfoUserByEmailRequest): Promise<GetInfoUserResponse> | Observable<GetInfoUserResponse> | GetInfoUserResponse;
 }
 export declare function AuthServiceControllerMethods(): (constructor: Function) => void;
 export declare const AUTH_SERVICE_NAME = "AuthService";

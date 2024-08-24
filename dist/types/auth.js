@@ -10,7 +10,7 @@ exports.AUTH_SERVICE_NAME = exports.AuthServiceControllerMethods = void 0;
 const microservices_1 = require("@nestjs/microservices");
 function AuthServiceControllerMethods() {
     return function (constructor) {
-        const grpcMethods = ["getInforById", "getInforByEmail"];
+        const grpcMethods = ["getInfoById", "getInfoByEmail"];
         for (const method of grpcMethods) {
             const descriptor = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
             (0, microservices_1.GrpcMethod)("AuthService", method)(constructor.prototype[method], method, descriptor);

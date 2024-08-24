@@ -11,39 +11,39 @@ import { Observable } from "rxjs";
 export interface Empty {
 }
 
-export interface GetInforUserByIdRequest {
+export interface GetInfoUserByIdRequest {
   userId: string;
 }
 
-export interface GetInforUserByEmailRequest {
+export interface GetInfoUserByEmailRequest {
   email: string;
 }
 
-export interface GetInforUserResponse {
+export interface GetInfoUserResponse {
   firstName: string;
   lastName: string;
   email: string;
 }
 
 export interface AuthServiceClient {
-  getInforById(request: GetInforUserByIdRequest): Observable<GetInforUserResponse>;
+  getInfoById(request: GetInfoUserByIdRequest): Observable<GetInfoUserResponse>;
 
-  getInforByEmail(request: GetInforUserByEmailRequest): Observable<GetInforUserResponse>;
+  getInfoByEmail(request: GetInfoUserByEmailRequest): Observable<GetInfoUserResponse>;
 }
 
 export interface AuthServiceController {
-  getInforById(
-    request: GetInforUserByIdRequest,
-  ): Promise<GetInforUserResponse> | Observable<GetInforUserResponse> | GetInforUserResponse;
+  getInfoById(
+    request: GetInfoUserByIdRequest,
+  ): Promise<GetInfoUserResponse> | Observable<GetInfoUserResponse> | GetInfoUserResponse;
 
-  getInforByEmail(
-    request: GetInforUserByEmailRequest,
-  ): Promise<GetInforUserResponse> | Observable<GetInforUserResponse> | GetInforUserResponse;
+  getInfoByEmail(
+    request: GetInfoUserByEmailRequest,
+  ): Promise<GetInfoUserResponse> | Observable<GetInfoUserResponse> | GetInfoUserResponse;
 }
 
 export function AuthServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["getInforById", "getInforByEmail"];
+    const grpcMethods: string[] = ["getInfoById", "getInfoByEmail"];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("AuthService", method)(constructor.prototype[method], method, descriptor);
