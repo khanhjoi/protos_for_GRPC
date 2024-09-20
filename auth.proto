@@ -6,12 +6,17 @@ package auth;
 service AuthService {
   rpc getInfoById(GetInfoUserByIdRequest) returns (GetInfoUserResponse) {}
   rpc getInfoByEmail(GetInfoUserByEmailRequest) returns (GetInfoUserResponse) {}
+  rpc getRoleById(GetRoleByIdByIdRequest) returns (GetRoleByIdResponse){}
 }
 
 message Empty {}
 
 message GetInfoUserByIdRequest {
     string userId = 1;
+}
+
+message GetRoleByIdByIdRequest {
+    string roleId = 1;
 }
 
 message GetInfoUserByEmailRequest {
@@ -22,5 +27,17 @@ message GetInfoUserResponse {
     string firstName = 1;
     string lastName = 2;
     string email = 3;
+}
+
+message GetRoleByIdResponse {
+    string id = 1;
+    bool active = 4;
+    repeated Permission permissions = 6;
+}
+
+message Permission {
+    string action = 1;
+    string subject = 2;
+    string condition = 3;
 }
 

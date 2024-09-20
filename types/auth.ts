@@ -15,6 +15,10 @@ export interface GetInfoUserByIdRequest {
   userId: string;
 }
 
+export interface GetRoleByIdByIdRequest {
+  roleId: string;
+}
+
 export interface GetInfoUserByEmailRequest {
   email: string;
 }
@@ -25,10 +29,24 @@ export interface GetInfoUserResponse {
   email: string;
 }
 
+export interface GetRoleByIdResponse {
+  id: string;
+  active: boolean;
+  permissions: Permission[];
+}
+
+export interface Permission {
+  action: string;
+  subject: string;
+  condition: string;
+}
+
 export interface AuthServiceClient {
   getInfoById(request: GetInfoUserByIdRequest): Observable<GetInfoUserResponse>;
 
   getInfoByEmail(request: GetInfoUserByEmailRequest): Observable<GetInfoUserResponse>;
+
+  getRoleById(request: GetRoleByIdByIdRequest): Observable<GetRoleByIdResponse>;
 }
 
 export interface AuthServiceController {
@@ -39,11 +57,15 @@ export interface AuthServiceController {
   getInfoByEmail(
     request: GetInfoUserByEmailRequest,
   ): Promise<GetInfoUserResponse> | Observable<GetInfoUserResponse> | GetInfoUserResponse;
+
+  getRoleById(
+    request: GetRoleByIdByIdRequest,
+  ): Promise<GetRoleByIdResponse> | Observable<GetRoleByIdResponse> | GetRoleByIdResponse;
 }
 
 export function AuthServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["getInfoById", "getInfoByEmail"];
+    const grpcMethods: string[] = ["getInfoById", "getInfoByEmail", "getRoleById"];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("AuthService", method)(constructor.prototype[method], method, descriptor);
