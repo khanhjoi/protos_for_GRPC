@@ -4,40 +4,59 @@ package auth;
 
 
 service AuthService {
-  rpc getInfoById(GetInfoUserByIdRequest) returns (GetInfoUserResponse) {}
-  rpc getInfoByEmail(GetInfoUserByEmailRequest) returns (GetInfoUserResponse) {}
-  rpc getRoleById(GetRoleByIdByIdRequest) returns (GetRoleByIdResponse){}
+  rpc getInfoById(GetUserByIdRequest) returns (GetUserResponse) {}
+  rpc getInfoByEmail(GetUserByEmailRequest) returns (GetUserResponse) {}
+  rpc checkValidToken(ValidTokenRequest) returns (ValidTokenResponse) {}
 }
 
 message Empty {}
 
-message GetInfoUserByIdRequest {
+message GetUserByIdRequest {
     string userId = 1;
 }
 
-message GetRoleByIdByIdRequest {
-    string roleId = 1;
-}
-
-message GetInfoUserByEmailRequest {
+message GetUserByEmailRequest {
     string email = 1;
 }
 
-message GetInfoUserResponse {
-    string firstName = 1;
-    string lastName = 2;
-    string email = 3;
+message ValidTokenRequest {
+    string token = 1;
 }
 
-message GetRoleByIdResponse {
+message GetUserResponse {
+    User user = 1;
+}
+
+message ValidTokenResponse {
+    Payload payload = 1;
+}
+
+message Payload {
+    string sub = 1;
+    string roleId = 2;
+}
+
+message User {
     string id = 1;
-    bool active = 4;
-    repeated Permission permissions = 6;
+    string firstName = 2;
+    string lastName = 3;
+    string email = 4;
+    string createdAt = 5;
+    Role role = 6;
+}
+
+message Role {
+    string id = 1;
+    string title = 2;
+    repeated Permission permissions = 3;
 }
 
 message Permission {
-    string action = 1;
-    string subject = 2;
-    string condition = 3;
+    string id = 1;
+    string title = 2;
+    string action = 3;
+    string subject = 4;
 }
+
+
 

@@ -11,61 +11,76 @@ import { Observable } from "rxjs";
 export interface Empty {
 }
 
-export interface GetInfoUserByIdRequest {
+export interface GetUserByIdRequest {
   userId: string;
 }
 
-export interface GetRoleByIdByIdRequest {
+export interface GetUserByEmailRequest {
+  email: string;
+}
+
+export interface ValidTokenRequest {
+  token: string;
+}
+
+export interface GetUserResponse {
+  user: User | undefined;
+}
+
+export interface ValidTokenResponse {
+  payload: Payload | undefined;
+}
+
+export interface Payload {
+  sub: string;
   roleId: string;
 }
 
-export interface GetInfoUserByEmailRequest {
-  email: string;
-}
-
-export interface GetInfoUserResponse {
+export interface User {
+  id: string;
   firstName: string;
   lastName: string;
   email: string;
+  createdAt: string;
+  role: Role | undefined;
 }
 
-export interface GetRoleByIdResponse {
+export interface Role {
   id: string;
-  active: boolean;
+  title: string;
   permissions: Permission[];
 }
 
 export interface Permission {
+  id: string;
+  title: string;
   action: string;
   subject: string;
-  condition: string;
 }
 
 export interface AuthServiceClient {
-  getInfoById(request: GetInfoUserByIdRequest): Observable<GetInfoUserResponse>;
+  getInfoById(request: GetUserByIdRequest): Observable<GetUserResponse>;
 
-  getInfoByEmail(request: GetInfoUserByEmailRequest): Observable<GetInfoUserResponse>;
+  getInfoByEmail(request: GetUserByEmailRequest): Observable<GetUserResponse>;
 
-  getRoleById(request: GetRoleByIdByIdRequest): Observable<GetRoleByIdResponse>;
+  checkValidToken(request: ValidTokenRequest): Observable<ValidTokenResponse>;
 }
 
 export interface AuthServiceController {
-  getInfoById(
-    request: GetInfoUserByIdRequest,
-  ): Promise<GetInfoUserResponse> | Observable<GetInfoUserResponse> | GetInfoUserResponse;
+  getInfoById(request: GetUserByIdRequest): Promise<GetUserResponse> | Observable<GetUserResponse> | GetUserResponse;
 
   getInfoByEmail(
-    request: GetInfoUserByEmailRequest,
-  ): Promise<GetInfoUserResponse> | Observable<GetInfoUserResponse> | GetInfoUserResponse;
+    request: GetUserByEmailRequest,
+  ): Promise<GetUserResponse> | Observable<GetUserResponse> | GetUserResponse;
 
-  getRoleById(
-    request: GetRoleByIdByIdRequest,
-  ): Promise<GetRoleByIdResponse> | Observable<GetRoleByIdResponse> | GetRoleByIdResponse;
+  checkValidToken(
+    request: ValidTokenRequest,
+  ): Promise<ValidTokenResponse> | Observable<ValidTokenResponse> | ValidTokenResponse;
 }
 
 export function AuthServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["getInfoById", "getInfoByEmail", "getRoleById"];
+    const grpcMethods: string[] = ["getInfoById", "getInfoByEmail", "checkValidToken"];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("AuthService", method)(constructor.prototype[method], method, descriptor);
