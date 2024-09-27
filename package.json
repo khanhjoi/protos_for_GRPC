@@ -1,6 +1,6 @@
 {
   "name": "@khanhjoi/protos",
-  "version": "1.1.0",
+  "version": "1.1.2",
   "description": "common protos and HttpException",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -11,8 +11,10 @@
   "author": "khanhjoi",
   "license": "ISC",
   "dependencies": {
+    "@casl/ability": "^6.7.1",
     "@nestjs/common": "^10.4.1",
     "@nestjs/microservices": "^10.3.10",
+    "path": "^0.12.7",
     "rxjs": "^7.8.1",
     "ts-proto": "^1.181.1"
   },
