@@ -24,8 +24,7 @@ import { AuthGrpcService } from "./auth.grpc.service";
       provide: "AUTH_GRPC_SERVICE",
       useClass: AuthGrpcService,
     },
-    AbilitiesGuard
   ],
-  exports: ["AUTH_GRPC_SERVICE", AbilitiesGuard],
+  exports: ["AUTH_GRPC_SERVICE",],
 })
 export class SharedGuardModule {}

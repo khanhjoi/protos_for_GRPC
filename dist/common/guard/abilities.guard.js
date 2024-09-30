@@ -28,7 +28,7 @@ const common_1 = require("@nestjs/common");
 const abilities_decorator_1 = require("../decorator/abilities.decorator");
 const rxjs_1 = require("rxjs");
 let AbilitiesGuard = class AbilitiesGuard {
-    constructor(reflector, authGrpcService) {
+    constructor(reflector, authGrpcService, cacheService) {
         /**
          * This will return the PureAbility to use for Authentication
          * @param rules List of permissions
@@ -44,6 +44,7 @@ let AbilitiesGuard = class AbilitiesGuard {
         };
         this.reflector = reflector;
         this.authGrpcService = authGrpcService;
+        this.cacheService = cacheService;
     }
     canActivate(context) {
         var _a, e_1, _b, _c;
@@ -52,26 +53,33 @@ let AbilitiesGuard = class AbilitiesGuard {
             // Get list of rules to access the function
             const rules = this.reflector.get(abilities_decorator_1.CHECK_ABILITY, context.getHandler()) ||
                 [];
-            console.log("rules", rules);
             const currentUser = context.switchToHttp().getRequest().user;
-            console.log("user payload", currentUser);
             if (!currentUser) {
                 throw new common_1.ForbiddenException("User not found");
             }
             let user;
-            try {
-                // If AuthGrpcService is provided, fetch the user info
-                if (this.authGrpcService) {
-                    user = yield (0, rxjs_1.lastValueFrom)(this.authGrpcService.getUserInfo(currentUser.sub));
+            // find data in Redis store first
+            const cacheData = yield this.cacheService.getValueByKey(currentUser === null || currentUser === void 0 ? void 0 : currentUser.sub);
+            if (cacheData) {
+                user = {
+                    user: cacheData,
+                };
+            }
+            else {
+                // use data don't had then call grpc to get info user
+                try {
+                    // If AuthGrpcService is provided, fetch the user info
+                    if (this.authGrpcService) {
+                        user = yield (0, rxjs_1.lastValueFrom)(this.authGrpcService.getUserInfo(currentUser.sub));
+                    }
+                    else {
+                        throw new common_1.ForbiddenException("User service not available");
+                    }
                 }
-                else {
-                    throw new common_1.ForbiddenException("User service not available");
+                catch (error) {
+                    throw new common_1.ForbiddenException("User not found");
                 }
             }
-            catch (error) {
-                throw new common_1.ForbiddenException("User not found");
-            }
-            console.log("check user", user);
             // Get current user permissions
             if (!((_e = (_d = user === null || user === void 0 ? void 0 : user.user) === null || _d === void 0 ? void 0 : _d.role) === null || _e === void 0 ? void 0 : _e.id)) {
                 throw new common_1.ForbiddenException("You are not allowed to perform this action");

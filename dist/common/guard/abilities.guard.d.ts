@@ -3,10 +3,12 @@ import { RawRuleOf, Ability } from "@casl/ability";
 import { CanActivate, ExecutionContext } from "@nestjs/common";
 import { AppAbility } from "./abilities.factory";
 import { AuthGrpcService } from "./auth.grpc.service";
+import { CacheSharedService } from "../cache/cacheShared.service";
 export declare class AbilitiesGuard implements CanActivate {
     private reflector;
     private authGrpcService;
-    constructor(reflector: Reflector, authGrpcService: AuthGrpcService);
+    private cacheService;
+    constructor(reflector: Reflector, authGrpcService: AuthGrpcService, cacheService: CacheSharedService);
     /**
      * This will return the PureAbility to use for Authentication
      * @param rules List of permissions

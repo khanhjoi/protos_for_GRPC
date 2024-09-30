@@ -34,4 +34,5 @@ var AuthErrorCode;
     AuthErrorCode[AuthErrorCode["UNKNOWN_ERROR"] = 10021] = "UNKNOWN_ERROR";
     AuthErrorCode[AuthErrorCode["DEFAULT_ERROR"] = 10022] = "DEFAULT_ERROR";
     AuthErrorCode[AuthErrorCode["DATABASE_ERROR"] = 10023] = "DATABASE_ERROR";
+    AuthErrorCode[AuthErrorCode["CACHE_ERROR"] = 10024] = "CACHE_ERROR";
 })(AuthErrorCode || (exports.AuthErrorCode = AuthErrorCode = {}));

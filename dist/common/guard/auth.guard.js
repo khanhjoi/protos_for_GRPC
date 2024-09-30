@@ -22,14 +22,12 @@ exports.AuthGuard = void 0;
 const common_1 = require("@nestjs/common");
 const rxjs_1 = require("rxjs");
 let AuthGuard = class AuthGuard {
-    constructor(reflector, authGrpcService) {
-        this.reflector = reflector;
+    constructor(authGrpcService) {
         this.authGrpcService = authGrpcService;
     }
     canActivate(context) {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
-            console.log(this.reflector);
             const request = context.switchToHttp().getRequest();
             const token = this.extractTokenFromCookie(request);
             if (!token) {
@@ -37,7 +35,6 @@ let AuthGuard = class AuthGuard {
             }
             try {
                 const { payload } = yield (0, rxjs_1.lastValueFrom)((_a = this.authGrpcService) === null || _a === void 0 ? void 0 : _a.checkToken(token));
-                console.log("---payload---", payload);
                 request["user"] = payload;
                 request["token"] = token;
             }
@@ -54,5 +51,5 @@ let AuthGuard = class AuthGuard {
 exports.AuthGuard = AuthGuard;
 exports.AuthGuard = AuthGuard = __decorate([
     (0, common_1.Injectable)(),
-    __param(1, (0, common_1.Inject)("AUTH_GRPC_SERVICE"))
+    __param(0, (0, common_1.Inject)("AUTH_GRPC_SERVICE"))
 ], AuthGuard);

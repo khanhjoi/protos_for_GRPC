@@ -29,6 +29,7 @@ export declare enum AuthErrorCode {
     PERMISSION_DELETE_FAILED = 10020,
     UNKNOWN_ERROR = 10021,
     DEFAULT_ERROR = 10022,
-    DATABASE_ERROR = 10023
+    DATABASE_ERROR = 10023,
+    CACHE_ERROR = 10024
 }
 //# sourceMappingURL=AuthError.enum.d.ts.map

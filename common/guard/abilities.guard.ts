@@ -18,15 +18,22 @@ import { AppAbility } from "./abilities.factory";
 import { CHECK_ABILITY, RequiredRule } from "../decorator/abilities.decorator";
 import { AuthGrpcService } from "./auth.grpc.service";
 import { lastValueFrom } from "rxjs";
+import { CacheSharedService } from "../cache/cacheShared.service";
 
 @Injectable()
 export class AbilitiesGuard implements CanActivate {
   private reflector: Reflector;
   private authGrpcService: AuthGrpcService;
+  private cacheService: CacheSharedService;
 
-  constructor(reflector: Reflector, authGrpcService: AuthGrpcService) {
+  constructor(
+    reflector: Reflector,
+    authGrpcService: AuthGrpcService,
+    cacheService: CacheSharedService
+  ) {
     this.reflector = reflector;
     this.authGrpcService = authGrpcService;
+    this.cacheService = cacheService;
   }
 
   /**
@@ -59,17 +66,28 @@ export class AbilitiesGuard implements CanActivate {
 
     let user: any;
 
-    try {
-      // If AuthGrpcService is provided, fetch the user info
-      if (this.authGrpcService) {
-        user = await lastValueFrom(
-          this.authGrpcService.getUserInfo(currentUser.sub)
-        );
-      } else {
-        throw new ForbiddenException("User service not available");
+    // find data in Redis store first
+    const cacheData = await this.cacheService.getValueByKey(currentUser?.sub);
+
+
+    if (cacheData) {
+      user = {
+        user: cacheData,
+      };
+    } else {
+      // use data don't had then call grpc to get info user
+      try {
+        // If AuthGrpcService is provided, fetch the user info
+        if (this.authGrpcService) {
+          user = await lastValueFrom(
+            this.authGrpcService.getUserInfo(currentUser.sub)
+          );
+        } else {
+          throw new ForbiddenException("User service not available");
+        }
+      } catch (error) {
+        throw new ForbiddenException("User not found");
       }
-    } catch (error) {
-      throw new ForbiddenException("User not found");
     }
 
     // Get current user permissions
