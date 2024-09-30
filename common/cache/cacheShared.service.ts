@@ -21,7 +21,7 @@ export class CacheSharedService {
     }
   }
 
-  async setValue(key: string, user: User): Promise<User> {
+  async setValue(key: string, user: User|any): Promise<User> {
     try {
       this.logger.log(`Setting cache redis for key: ${key}`);
 
@@ -40,7 +40,6 @@ export class CacheSharedService {
   async deleteValue(key: string): Promise<void> {
     try {
       this.logger.log(`Deleting cache redis for key: ${key}`);
-
       await this.cacheManager.del(`${key}`);
     } catch (error) {
       throw new BadRequestException(`Error Cache`, AuthErrorCode.CACHE_ERROR);
