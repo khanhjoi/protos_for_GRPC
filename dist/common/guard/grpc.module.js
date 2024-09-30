@@ -6,16 +6,15 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SharedGuardModule = void 0;
+exports.GrpcModule = void 0;
 const common_1 = require("@nestjs/common");
 const microservices_1 = require("@nestjs/microservices");
 const path_1 = require("path");
-const abilities_guard_1 = require("../guard/abilities.guard");
 const auth_grpc_service_1 = require("./auth.grpc.service");
-let SharedGuardModule = class SharedGuardModule {
+let GrpcModule = class GrpcModule {
 };
-exports.SharedGuardModule = SharedGuardModule;
-exports.SharedGuardModule = SharedGuardModule = __decorate([
+exports.GrpcModule = GrpcModule;
+exports.GrpcModule = GrpcModule = __decorate([
     (0, common_1.Global)(),
     (0, common_1.Module)({
         imports: [
@@ -31,13 +30,7 @@ exports.SharedGuardModule = SharedGuardModule = __decorate([
                 },
             ]),
         ],
-        providers: [
-            {
-                provide: "AUTH_GRPC_SERVICE",
-                useClass: auth_grpc_service_1.AuthGrpcService,
-            },
-            abilities_guard_1.AbilitiesGuard
-        ],
-        exports: ["AUTH_GRPC_SERVICE", abilities_guard_1.AbilitiesGuard],
+        providers: [auth_grpc_service_1.AuthGrpcService],
+        exports: [auth_grpc_service_1.AuthGrpcService],
     })
-], SharedGuardModule);
+], GrpcModule);

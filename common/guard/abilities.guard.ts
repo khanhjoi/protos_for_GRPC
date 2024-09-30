@@ -1,4 +1,4 @@
-import { Reflector } from "@nestjs/core";
+import { ModuleRef, Reflector } from "@nestjs/core";
 import {
   subject,
   RawRuleOf,
@@ -6,19 +6,28 @@ import {
   AbilityBuilder,
   Ability,
 } from "@casl/ability";
-
 import {
   Injectable,
   CanActivate,
   ExecutionContext,
   ForbiddenException,
+  Inject,
+  OnModuleInit,
 } from "@nestjs/common";
-import { AppAbility } from "./ablities.factory";
+import { AppAbility } from "./abilities.factory";
 import { CHECK_ABILITY, RequiredRule } from "../decorator/abilities.decorator";
+import { AuthGrpcService } from "./auth.grpc.service";
+import { lastValueFrom } from "rxjs";
 
 @Injectable()
 export class AbilitiesGuard implements CanActivate {
-  constructor(private reflector: Reflector) {}
+  private reflector: Reflector;
+  private authGrpcService: AuthGrpcService;
+
+  constructor(reflector: Reflector, authGrpcService: AuthGrpcService) {
+    this.reflector = reflector;
+    this.authGrpcService = authGrpcService;
+  }
 
   /**
    * This will return the PureAbility to use for Authentication
@@ -38,36 +47,40 @@ export class AbilitiesGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     // Get list of rules to access the function
-    const rules: any =
+    const rules: RequiredRule[] =
       this.reflector.get<RequiredRule[]>(CHECK_ABILITY, context.getHandler()) ||
       [];
 
     const currentUser: any = context.switchToHttp().getRequest().user;
-    // const superAdmin = this.configService.get<string>("super_Admin_Id");
 
-    // Pass when user is a super admin
-    // if (currentUser?.roleId === superAdmin) {
-    //   return true;
-    // }
+    if (!currentUser) {
+      throw new ForbiddenException("User not found");
+    }
 
-    // // Get current user permissions
-    // const user = await this.entityManager.getRepository(User).findOne({
-    //   where: {
-    //     id: currentUser.sub,
-    //   },
-    //   relations: {
-    //     role: true,
-    //   },
-    // });
-
-    // if (!user.role.id) {
-    //   throw new ForbiddenException(
-    //     "You are not allowed to perform this action"
-    //   );
-    // }
+    let user: any;
 
     try {
-      const ability = this.createAbility(Object({}));
+      // If AuthGrpcService is provided, fetch the user info
+      if (this.authGrpcService) {
+        user = await lastValueFrom(
+          this.authGrpcService.getUserInfo(currentUser.sub)
+        );
+      } else {
+        throw new ForbiddenException("User service not available");
+      }
+    } catch (error) {
+      throw new ForbiddenException("User not found");
+    }
+
+    // Get current user permissions
+    if (!user?.user?.role?.id) {
+      throw new ForbiddenException(
+        "You are not allowed to perform this action"
+      );
+    }
+
+    try {
+      const ability = this.createAbility(Object(user.user.role.permissions));
 
       for await (const rule of rules) {
         let sub = {};

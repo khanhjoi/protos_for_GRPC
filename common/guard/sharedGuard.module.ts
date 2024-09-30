@@ -2,7 +2,6 @@ import { Global, Module } from "@nestjs/common";
 import { ClientsModule, Transport } from "@nestjs/microservices";
 import { join } from "path";
 import { AbilitiesGuard } from "../guard/abilities.guard";
-import { AuthGuard } from "../guard/auth.guard";
 import { AuthGrpcService } from "./auth.grpc.service";
 
 @Global()
@@ -15,12 +14,18 @@ import { AuthGrpcService } from "./auth.grpc.service";
         options: {
           package: "auth",
           url: "localhost:8081",
-          protoPath: join(__dirname, "../auth.proto"),
+          protoPath: join(__dirname, "../../../auth.proto"),
         },
       },
     ]),
   ],
-  providers: [AbilitiesGuard, AuthGuard, AuthGrpcService],
-  exports: [AbilitiesGuard, AuthGuard, AuthGrpcService],
+  providers: [
+    {
+      provide: "AUTH_GRPC_SERVICE",
+      useClass: AuthGrpcService,
+    },
+    AbilitiesGuard
+  ],
+  exports: ["AUTH_GRPC_SERVICE", AbilitiesGuard],
 })
 export class SharedGuardModule {}

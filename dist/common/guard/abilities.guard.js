@@ -26,9 +26,9 @@ exports.AbilitiesGuard = void 0;
 const ability_1 = require("@casl/ability");
 const common_1 = require("@nestjs/common");
 const abilities_decorator_1 = require("../decorator/abilities.decorator");
+const rxjs_1 = require("rxjs");
 let AbilitiesGuard = class AbilitiesGuard {
-    constructor(reflector) {
-        this.reflector = reflector;
+    constructor(reflector, authGrpcService) {
         /**
          * This will return the PureAbility to use for Authentication
          * @param rules List of permissions
@@ -42,39 +42,46 @@ let AbilitiesGuard = class AbilitiesGuard {
             }
             return build();
         };
+        this.reflector = reflector;
+        this.authGrpcService = authGrpcService;
     }
     canActivate(context) {
         var _a, e_1, _b, _c;
+        var _d, _e;
         return __awaiter(this, void 0, void 0, function* () {
             // Get list of rules to access the function
             const rules = this.reflector.get(abilities_decorator_1.CHECK_ABILITY, context.getHandler()) ||
                 [];
+            console.log("rules", rules);
             const currentUser = context.switchToHttp().getRequest().user;
-            // const superAdmin = this.configService.get<string>("super_Admin_Id");
-            // Pass when user is a super admin
-            // if (currentUser?.roleId === superAdmin) {
-            //   return true;
-            // }
-            // // Get current user permissions
-            // const user = await this.entityManager.getRepository(User).findOne({
-            //   where: {
-            //     id: currentUser.sub,
-            //   },
-            //   relations: {
-            //     role: true,
-            //   },
-            // });
-            // if (!user.role.id) {
-            //   throw new ForbiddenException(
-            //     "You are not allowed to perform this action"
-            //   );
-            // }
+            console.log("user payload", currentUser);
+            if (!currentUser) {
+                throw new common_1.ForbiddenException("User not found");
+            }
+            let user;
             try {
-                const ability = this.createAbility(Object({}));
+                // If AuthGrpcService is provided, fetch the user info
+                if (this.authGrpcService) {
+                    user = yield (0, rxjs_1.lastValueFrom)(this.authGrpcService.getUserInfo(currentUser.sub));
+                }
+                else {
+                    throw new common_1.ForbiddenException("User service not available");
+                }
+            }
+            catch (error) {
+                throw new common_1.ForbiddenException("User not found");
+            }
+            console.log("check user", user);
+            // Get current user permissions
+            if (!((_e = (_d = user === null || user === void 0 ? void 0 : user.user) === null || _d === void 0 ? void 0 : _d.role) === null || _e === void 0 ? void 0 : _e.id)) {
+                throw new common_1.ForbiddenException("You are not allowed to perform this action");
+            }
+            try {
+                const ability = this.createAbility(Object(user.user.role.permissions));
                 try {
-                    for (var _d = true, rules_1 = __asyncValues(rules), rules_1_1; rules_1_1 = yield rules_1.next(), _a = rules_1_1.done, !_a; _d = true) {
+                    for (var _f = true, rules_1 = __asyncValues(rules), rules_1_1; rules_1_1 = yield rules_1.next(), _a = rules_1_1.done, !_a; _f = true) {
                         _c = rules_1_1.value;
-                        _d = false;
+                        _f = false;
                         const rule = _c;
                         let sub = {};
                         ability_1.ForbiddenError.setDefaultMessage((error) => `You are not allowed to ${error.action} on ${error.subjectType}`);
@@ -85,7 +92,7 @@ let AbilitiesGuard = class AbilitiesGuard {
                 catch (e_1_1) { e_1 = { error: e_1_1 }; }
                 finally {
                     try {
-                        if (!_d && !_a && (_b = rules_1.return)) yield _b.call(rules_1);
+                        if (!_f && !_a && (_b = rules_1.return)) yield _b.call(rules_1);
                     }
                     finally { if (e_1) throw e_1.error; }
                 }

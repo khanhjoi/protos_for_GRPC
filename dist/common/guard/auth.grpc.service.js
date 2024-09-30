@@ -5,6 +5,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -17,35 +20,24 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthGrpcService = void 0;
 const common_1 = require("@nestjs/common");
+const microservices_1 = require("@nestjs/microservices");
 let AuthGrpcService = class AuthGrpcService {
-    /**
-     *  This is used to directly get the module client
-     *  as it can be injected normally using @Inject()
-     *  For more information, refer to: https://docs.nestjs.com/fundamentals/module-ref
-     * @param moduleRef
-     */
-    constructor(moduleRef) {
-        this.moduleRef = moduleRef;
+    constructor(client) {
+        this.client = client;
     }
     onModuleInit() {
-        this.grpcClient = this.moduleRef.get("Auth_Service", {
-            strict: false,
-        });
-        this.authService =
-            this.grpcClient.getService("AuthService");
+        this.authService = this.client.getService("AuthService");
     }
     getUserInfo(userId) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                return this.authService.getInfoById({
-                    userId: userId,
-                });
-            }
-            catch (error) {
-                // Handle error appropriately
-                throw new Error("Failed to get user info");
-            }
-        });
+        try {
+            return this.authService.getInfoById({
+                userId: userId,
+            });
+        }
+        catch (error) {
+            // Handle error appropriately
+            throw new microservices_1.RpcException("Failed to get user info");
+        }
     }
     getInfoByEmail(email) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -56,24 +48,23 @@ let AuthGrpcService = class AuthGrpcService {
             }
             catch (error) {
                 // Handle error appropriately
-                throw new Error("Failed to get user info by email");
+                throw new microservices_1.RpcException("Failed to get user info by email");
             }
         });
     }
     checkToken(token) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                return this.authService.checkValidToken({
-                    token: token,
-                });
-            }
-            catch (error) {
-                throw new Error("Failed to check token validity");
-            }
-        });
+        try {
+            return this.authService.checkValidToken({
+                token: token,
+            });
+        }
+        catch (error) {
+            throw new microservices_1.RpcException("Failed to check token validity");
+        }
     }
 };
 exports.AuthGrpcService = AuthGrpcService;
 exports.AuthGrpcService = AuthGrpcService = __decorate([
-    (0, common_1.Injectable)()
+    (0, common_1.Injectable)(),
+    __param(0, (0, common_1.Inject)("Auth_Service"))
 ], AuthGrpcService);

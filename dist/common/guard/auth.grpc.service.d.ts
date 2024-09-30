@@ -1,19 +1,14 @@
 import { OnModuleInit } from "@nestjs/common";
-import { ModuleRef } from "@nestjs/core";
+import { ClientGrpc } from "@nestjs/microservices";
+import { GetUserResponse, ValidTokenResponse } from "../../types/auth";
+import { Observable } from "rxjs";
 export declare class AuthGrpcService implements OnModuleInit {
-    private readonly moduleRef;
-    private grpcClient;
+    private client;
     private authService;
-    /**
-     *  This is used to directly get the module client
-     *  as it can be injected normally using @Inject()
-     *  For more information, refer to: https://docs.nestjs.com/fundamentals/module-ref
-     * @param moduleRef
-     */
-    constructor(moduleRef: ModuleRef);
+    constructor(client: ClientGrpc);
     onModuleInit(): void;
-    getUserInfo(userId: string): Promise<import("rxjs").Observable<import("../../types/auth").GetUserResponse>>;
-    getInfoByEmail(email: string): Promise<import("rxjs").Observable<import("../../types/auth").GetUserResponse>>;
-    checkToken(token: string): Promise<import("rxjs").Observable<import("../../types/auth").ValidTokenResponse>>;
+    getUserInfo(userId: string): Observable<GetUserResponse>;
+    getInfoByEmail(email: string): Promise<Observable<GetUserResponse>>;
+    checkToken(token: string): Observable<ValidTokenResponse>;
 }
 //# sourceMappingURL=auth.grpc.service.d.ts.map
