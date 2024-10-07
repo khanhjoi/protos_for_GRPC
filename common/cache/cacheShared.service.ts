@@ -21,7 +21,7 @@ export class CacheSharedService {
     }
   }
 
-  async setValue(key: string, user: User|any): Promise<User> {
+  async setValue(key: string, user: User | any): Promise<User> {
     try {
       this.logger.log(`Setting cache redis for key: ${key}`);
 

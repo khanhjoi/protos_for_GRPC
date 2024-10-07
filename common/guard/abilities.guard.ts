@@ -69,7 +69,6 @@ export class AbilitiesGuard implements CanActivate {
     // find data in Redis store first
     const cacheData = await this.cacheService.getValueByKey(currentUser?.sub);
 
-
     if (cacheData) {
       user = {
         user: cacheData,
@@ -98,6 +97,16 @@ export class AbilitiesGuard implements CanActivate {
     }
 
     try {
+      // Check if the user has the subject 'all' in their permissions
+      const hasAllAccess = user?.user?.role?.permissions.some(
+        (permission: any) => permission.subject === "all"
+      );
+
+      // If the user has 'all' as a subject, they get full access
+      if (hasAllAccess) {
+        return true;
+      }
+
       const ability = this.createAbility(Object(user.user.role.permissions));
 
       for await (const rule of rules) {

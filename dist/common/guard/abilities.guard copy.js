@@ -42,13 +42,16 @@ let AbilitiesGuard = class AbilitiesGuard {
             }
             return build();
         };
+        console.log('------------check----', reflector);
+        console.log('------------check----', authGrpcService);
+        console.log('------------check----', cacheService);
         this.reflector = reflector;
         this.authGrpcService = authGrpcService;
         this.cacheService = cacheService;
     }
     canActivate(context) {
         var _a, e_1, _b, _c;
-        var _d, _e, _f, _g;
+        var _d, _e;
         return __awaiter(this, void 0, void 0, function* () {
             // Get list of rules to access the function
             const rules = this.reflector.get(abilities_decorator_1.CHECK_ABILITY, context.getHandler()) ||
@@ -85,17 +88,11 @@ let AbilitiesGuard = class AbilitiesGuard {
                 throw new common_1.ForbiddenException("You are not allowed to perform this action");
             }
             try {
-                // Check if the user has the subject 'all' in their permissions
-                const hasAllAccess = (_g = (_f = user === null || user === void 0 ? void 0 : user.user) === null || _f === void 0 ? void 0 : _f.role) === null || _g === void 0 ? void 0 : _g.permissions.some((permission) => permission.subject === "all");
-                // If the user has 'all' as a subject, they get full access
-                if (hasAllAccess) {
-                    return true;
-                }
                 const ability = this.createAbility(Object(user.user.role.permissions));
                 try {
-                    for (var _h = true, rules_1 = __asyncValues(rules), rules_1_1; rules_1_1 = yield rules_1.next(), _a = rules_1_1.done, !_a; _h = true) {
+                    for (var _f = true, rules_1 = __asyncValues(rules), rules_1_1; rules_1_1 = yield rules_1.next(), _a = rules_1_1.done, !_a; _f = true) {
                         _c = rules_1_1.value;
-                        _h = false;
+                        _f = false;
                         const rule = _c;
                         let sub = {};
                         ability_1.ForbiddenError.setDefaultMessage((error) => `You are not allowed to ${error.action} on ${error.subjectType}`);
@@ -106,7 +103,7 @@ let AbilitiesGuard = class AbilitiesGuard {
                 catch (e_1_1) { e_1 = { error: e_1_1 }; }
                 finally {
                     try {
-                        if (!_h && !_a && (_b = rules_1.return)) yield _b.call(rules_1);
+                        if (!_f && !_a && (_b = rules_1.return)) yield _b.call(rules_1);
                     }
                     finally { if (e_1) throw e_1.error; }
                 }
