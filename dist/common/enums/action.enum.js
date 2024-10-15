@@ -1,11 +1,19 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Action = void 0;
-var Action;
-(function (Action) {
-    Action["READ"] = "READ";
-    Action["WRITE"] = "WRITE";
-    Action["DELETE"] = "DELETE";
-    Action["UPDATE"] = "UPDATE";
-    Action["MANAGER"] = "MANAGER";
-})(Action || (exports.Action = Action = {}));
+exports.ESubject = exports.EAction = void 0;
+var EAction;
+(function (EAction) {
+    EAction["READ"] = "READ";
+    EAction["WRITE"] = "WRITE";
+    EAction["DELETE"] = "DELETE";
+    EAction["UPDATE"] = "UPDATE";
+    EAction["MANAGER"] = "MANAGER";
+})(EAction || (exports.EAction = EAction = {}));
+var ESubject;
+(function (ESubject) {
+    ESubject["user"] = "User";
+    ESubject["route"] = "Route";
+    ESubject["port"] = "Port";
+    ESubject["vessel"] = "Vessel";
+    ESubject["all"] = "all";
+})(ESubject || (exports.ESubject = ESubject = {}));

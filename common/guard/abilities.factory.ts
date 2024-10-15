@@ -1,15 +1,15 @@
 import { ForcedSubject, Ability } from "@casl/ability";
-import { Action } from "../enums/action.enum";
+import { EAction, ESubject } from "../enums/action.enum";
 
 export const actions = [
-  Action.READ,
-  Action.MANAGER,
-  Action.WRITE,
-  Action.DELETE,
-  Action.DELETE,
+  EAction.READ,
+  EAction.MANAGER,
+  EAction.WRITE,
+  EAction.DELETE,
+  EAction.DELETE,
 ] as const;
 
-export const subjects = ["Route", "User", "all"] as const;
+export const subjects = [...Object.values(ESubject), "all"] as const;
 
 /**
  * Define all action and subjects in application

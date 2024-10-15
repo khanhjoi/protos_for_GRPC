@@ -1,7 +1,7 @@
 import { ForcedSubject, Ability } from "@casl/ability";
-import { Action } from "../enums/action.enum";
-export declare const actions: readonly [Action.READ, Action.MANAGER, Action.WRITE, Action.DELETE, Action.DELETE];
-export declare const subjects: readonly ["Route", "User", "all"];
+import { EAction, ESubject } from "../enums/action.enum";
+export declare const actions: readonly [EAction.READ, EAction.MANAGER, EAction.WRITE, EAction.DELETE, EAction.DELETE];
+export declare const subjects: readonly [...ESubject[], "all"];
 /**
  * Define all action and subjects in application
  */
