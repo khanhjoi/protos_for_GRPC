@@ -4,6 +4,7 @@ import { join } from "path";
 import { AbilitiesGuard } from "../guard/abilities.guard";
 import { AuthGrpcService } from "./auth.grpc.service";
 import { config } from "dotenv";
+import { AuthGuard } from "./auth.guard";
 
 config();
 
@@ -16,7 +17,7 @@ config();
         transport: Transport.GRPC,
         options: {
           package: "auth",
-          url:`${process.env.AUTH_SERVICE_HOST || 'localhost'}:8081`,
+          url: `${process.env.AUTH_SERVICE_HOST || "localhost"}:8081`,
           protoPath: join(__dirname, "../../../auth.proto"),
         },
       },
@@ -28,7 +29,8 @@ config();
       useClass: AuthGrpcService,
     },
     AbilitiesGuard,
+    AuthGuard,
   ],
-  exports: ["AUTH_GRPC_SERVICE", AbilitiesGuard],
+  exports: ["AUTH_GRPC_SERVICE", AbilitiesGuard, AuthGuard],
 })
 export class SharedGuardModule {}
