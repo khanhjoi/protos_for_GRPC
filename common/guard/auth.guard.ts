@@ -8,7 +8,6 @@ import {
 import { Request } from "express";
 import { AuthGrpcService } from "./auth.grpc.service";
 import { lastValueFrom } from "rxjs";
-import { Reflector } from "@nestjs/core";
 
 @Injectable()
 export class AuthGuard implements CanActivate {
