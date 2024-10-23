@@ -3,6 +3,9 @@ import { ClientsModule, Transport } from "@nestjs/microservices";
 import { join } from "path";
 import { AbilitiesGuard } from "../guard/abilities.guard";
 import { AuthGrpcService } from "./auth.grpc.service";
+import { config } from "dotenv";
+
+config();
 
 @Global()
 @Module({
@@ -13,7 +16,7 @@ import { AuthGrpcService } from "./auth.grpc.service";
         transport: Transport.GRPC,
         options: {
           package: "auth",
-          url: "localhost:8081",
+          url:`${process.env.AUTH_SERVICE_HOST || 'localhost'}:8081`,
           protoPath: join(__dirname, "../../../auth.proto"),
         },
       },

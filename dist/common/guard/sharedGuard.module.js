@@ -12,6 +12,8 @@ const microservices_1 = require("@nestjs/microservices");
 const path_1 = require("path");
 const abilities_guard_1 = require("../guard/abilities.guard");
 const auth_grpc_service_1 = require("./auth.grpc.service");
+const dotenv_1 = require("dotenv");
+(0, dotenv_1.config)();
 let SharedGuardModule = class SharedGuardModule {
 };
 exports.SharedGuardModule = SharedGuardModule;
@@ -25,7 +27,7 @@ exports.SharedGuardModule = SharedGuardModule = __decorate([
                     transport: microservices_1.Transport.GRPC,
                     options: {
                         package: "auth",
-                        url: "localhost:8081",
+                        url: `${process.env.AUTH_SERVICE_HOST || 'localhost'}:8081`,
                         protoPath: (0, path_1.join)(__dirname, "../../../auth.proto"),
                     },
                 },
