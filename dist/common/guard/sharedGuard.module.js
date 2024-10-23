@@ -39,7 +39,8 @@ exports.SharedGuardModule = SharedGuardModule = __decorate([
                 provide: "AUTH_GRPC_SERVICE",
                 useClass: auth_grpc_service_1.AuthGrpcService,
             },
-            abilities_guard_1.AbilitiesGuard, auth_guard_1.AuthGuard
+            abilities_guard_1.AbilitiesGuard,
+            auth_guard_1.AuthGuard,
         ],
         exports: ["AUTH_GRPC_SERVICE", abilities_guard_1.AbilitiesGuard, auth_guard_1.AuthGuard],
     })
